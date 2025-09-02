@@ -19,7 +19,7 @@ const ProfilePage = () => {
       navigate('/');
       return;
     }
-
+    
     const reader = new FileReader();
     reader.readAsDataURL(selectedImage);
     reader.onload = async () => {
@@ -27,7 +27,6 @@ const ProfilePage = () => {
       await updateProfile({profilePic: base64Image, fullName: name, bio})
       navigate('/');
     }
-
   }
 
   return (

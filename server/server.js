@@ -11,7 +11,28 @@ import { Server } from "socket.io";
 const app = express();
 const server = http.createServer(app);
 
-// Initialise socket.io server
+import cloudinary from './lib/cloudinary.js';
+
+app.get('/debug/cloudinary/ping', async (_req, res) => {
+  try {
+    const r = await cloudinary.api.ping();
+    res.json({ ok: true, r });
+  } catch (e) {
+    res.status(500).json({ ok: false, where: 'ping', error: e.message });
+  }
+});
+
+app.post('/debug/cloudinary/upload', async (_req, res) => {
+  try {
+    const onePx = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABAAAAAAAfFcSJAAAADUlEQVQYV2NgYGBgAAAABQABJtnYpwAAAABJRU5ErkJggg==';
+    const up = await cloudinary.uploader.upload(onePx, { resource_type: 'image', folder: 'debug' });
+    res.json({ ok: true, url: up.secure_url });
+  } catch (e) {
+    res.status(500).json({ ok: false, where: 'upload', error: e.message });
+  }
+});
+
+// Initialize socket.io server
 export const io = new Server(server, {
     cors: {origin: "*"}
 })
