@@ -1,7 +1,6 @@
-import { createContext, useState } from "react";
+import { createContext, useState, useEffect } from "react";
 import axios from "axios"
 import toast from "react-hot-toast";
-import { useEffect } from "react";
 import { io } from "socket.io-client"
 
 const backendUrl = import.meta.env.VITE_BACKEND_URL
@@ -18,11 +17,13 @@ export const AuthProvider = ({ children}) => {
     const [socket, setSocket] = useState(null)
 
     useEffect(() => {
-        if(token){
-            axios.defaults.headers.common["token"] = token;
+        if (token) {
+            axios.defaults.headers.common["token"] = token; // or "Authorization" Bearer if your middleware expects it
+            checkAuth();
+        } else {
+            delete axios.defaults.headers.common["token"];
         }
-        checkAuth()
-    }, [])
+    }, [token]);
 
     // Check if user is authenticated and if so, set the user data and connect the socket
     const checkAuth = async () => {

@@ -1,8 +1,9 @@
 import React, { useContext, useEffect, useRef, useState } from 'react'
-import assets, { messagesDummyData } from '../assets/assets'
+import assets from '../assets/assets'
 import { formatMessageTime } from '../lib/utils.js'
 import { ChatContext } from '../../context/ChatContext.jsx'
 import { AuthContext } from '../../context/AuthContext.jsx'
+import toast from 'react-hot-toast'
 
 const ChatContainer = () => {
 
@@ -88,7 +89,7 @@ const ChatContainer = () => {
 
       <div className='absolute bottom-0 left-0 right-0 flex items-center gap-3 p-3'>
         <div className="flex-1 flex items-center bg-gray-100/12 px-3 rounded-full">
-          <input onChange={() => setInput(e.target.value)} value={input} onKeyDown={(e) => e.key === "Enter" ? 
+          <input onChange={(e) => setInput(e.target.value)} value={input} onKeyDown={(e) => e.key === "Enter" ? 
             handleSendMessage(e) : null
           } type="text" placeholder="Send a message" className='flex-1 text-sm p-3 border-none rounded-lg outline-none text-white placeholder-gray-400'/>
           <input onChange={handleSendImage} type="file" id="image" accept='image/png, image/jpeg' hidden/>

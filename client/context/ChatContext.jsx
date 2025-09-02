@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { AuthContext } from "./AuthContext.jsx";
 import toast from "react-hot-toast";
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const ChatContext = createContext();
 
 export const ChatProvider = ({children}) => {
@@ -43,7 +44,7 @@ export const ChatProvider = ({children}) => {
     // function to send message to selected user
     const sendMessage = async (messageData) => {
         try {
-            const { data } = await axios.post(`/api/messages/send${selectedUser._id}`, messageData)
+            const { data } = await axios.post(`/api/messages/send/${selectedUser._id}`, messageData)
             if(data.success){
                 setMessages((prevMessages) => [...prevMessages, data.newMessage] )
             }

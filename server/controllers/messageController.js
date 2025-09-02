@@ -7,13 +7,13 @@ import {io, userSocketMap} from "../server.js"
 
 export const getUsersForSidebar = async (req, res) => {
     try {
-        const userId = red.user._Id;
+        const userId = req.user._Id;
         const filteredUsers = await User.find({_id: {$ne: userId}}).select("-password");
 
         // Count number of messages not seen
 
         const unseenMessages = {}
-        const promises = filteredUsers.map(async () => {
+        const promises = filteredUsers.map(async (user) => {
             const messages = await Message.find({senderId: user._id, receiverId: userId, seen: false})
             if(messages.length > 0){
                 unseenMessages[user._id] = messages.length;
@@ -83,7 +83,7 @@ export const sendMessage = async (req, res) => {
         })
 
         // Emit the new message to the receiver's socket
-        const receiverSocketId = userSocketMap[receivedId];
+        const receiverSocketId = userSocketMap[receiverId];
         if (receiverSocketId) {
             io.to(receiverSocketId).emit("newMessage", newMessage);
         }
