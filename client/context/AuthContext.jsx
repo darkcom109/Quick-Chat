@@ -76,14 +76,19 @@ export const AuthProvider = ({ children}) => {
     const updateProfile = async (body) => {
         try {
             const { data } = await axios.put("/api/auth/update-profile", body)
-            if(data.success){
-                setAuthUser(data)
-                toast.success("Profile Updated Successfully")
+            if (data?.success) {
+            const updated = data.user || data.userData || {}; // normalize
+            setAuthUser(prev => ({ ...(prev || {}), ...updated })); // ✅ merge, don't replace
+            localStorage.setItem("authUser", JSON.stringify({ ...(authUser || {}), ...updated }));
+            toast.success("Profile Updated Successfully")
+            } else {
+            toast.error(data?.message || "Update failed")
             }
         } catch (error) {
             toast.error(error.message)
         }
     }
+
 
     // Connect socket function to handle socket connection and online users updates
 
